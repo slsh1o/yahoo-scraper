@@ -14,6 +14,14 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from calculate_3dbc import calculate_all_files
 
+# =======
+# OPTIONS
+# =======
+options = webdriver.ChromeOptions()
+# Headless mode
+options.headless = False
+# Set path to WebDriver
+webdriver_path = ''
 
 COMPANY_LIST = ('PD', 'ZUO', 'PINS', 'ZM', 'PVTL', 'DOCU', 'CLDR', 'RUN')
 
@@ -23,17 +31,20 @@ NEWS_DOWNLOAD_DIR = Path(__file__).resolve().with_name('last_news')
 
 
 # Set up chrome settings to auto download
-options = webdriver.ChromeOptions()
 options.add_experimental_option('prefs', {
     'download.default_directory': f'{DATA_DOWNLOAD_DIR}',
     'download.prompt_for_download': False,
     'download.directory_upgrade': True,
 })
-# Headless mode
-options.headless = True
 
 # Set up webdriver
-driver = webdriver.Chrome(options=options)
+if webdriver_path:
+    driver = webdriver.Chrome(
+        executable_path=webdriver_path,
+        options=options
+    )
+else:
+    driver = webdriver.Chrome(options=options)
 driver.get('https://finance.yahoo.com/')
 
 wait = WebDriverWait(driver, 5)
